@@ -1,1 +1,3 @@
-# tictactoe-js
+# Tic Tac Toe (Vaninlla Javascript)
+
+
