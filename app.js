@@ -1,32 +1,96 @@
+// classes to be used acording to game states
+/*
+* when game is not started : 
+    gameBody = ['bg-orange-300']
+    startGameBtn = ['bg-white','hover:bg-orange-400','hover:text-white','hover:font-bold','hover:scale-105']
+
+* when game is started :
+    gameBody = ['bg-orange-300']
+    startGameBtn = ['bg-orange-400']
+
+* when game ends :
+    gameBody = ['bg-green-300']
+    startGameBtn = ['bg-green-400','hover:bg-green-500','hover:text-white','hover:font-bold','hover:scale-105']
+*/
+
 // html elements
 const gameGrid = document.querySelectorAll("#game-body > div")
-const startGameBtn = document.getElementById('startGameBtn');
 const infoBar = document.querySelector('#infoBar > span');
+const gameBody = document.querySelector('body > div');
+const startGameBtn = document.getElementById('startGameBtn');
+const playerOneInputBox = document.getElementById('playerOneInput');
+const playerTwoInputBox = document.getElementById('playerTwoInput');
 
 // variables
 let turn = 1;
 let gameStarted = false;
-const playerOneName = 'John';
-const playerTwoName = 'Smith';
+let playerOneName = 'John';
+let playerTwoName = 'Smith';
+let markedGridsCount = 0;
 
 
 // functions
 function startGame () {
 
+    // clear grid before playing
+    gameGrid.forEach((grid) => {
+        grid.innerHTML = '';
+    });
+
+    // reset marked grids count
+    markedGridsCount = 0;
+
+    // set game body color
+    gameBody.classList.add("bg-orange-300");
 
     // change button appearance
     startGameBtn.textContent = "Game Started!";
-    startGameBtn.classList.remove('bg-white','hover:bg-orange-400','hover:text-white','hover:font-bold','hover:scale-105');
-    startGameBtn.classList.add('bg-orange-400');
+    startGameBtn.classList.remove('bg-white','hover:bg-orange-400','hover:text-white','hover:font-bold','hover:scale-105','hover:bg-green-500');
+    startGameBtn.classList.toggle('bg-orange-400');
 
     // set boolean to true
     gameStarted = true;
 
     // TODO : retrive values for input box
-    
+    console.log(playerOneInputBox.value);
+    playerOneName = playerOneInputBox.value;
+    playerTwoName = playerTwoInputBox.value;
+
 
     // set info bar text
     infoBar.innerHTML = playerOneName + "'s Turn";
+
+}
+
+function endGame (mark) {
+
+    // check which player won
+    if (mark === 'X'){
+        infoBar.textContent = playerOneName + " Won!";
+    } 
+        
+    else {
+        infoBar.textContent = playerTwoName + " Won!";
+    }
+
+    // stop the game
+    gameStarted = false;
+
+    // change startGameBtn
+    startGameBtn.textContent = "Click here to play again!";
+    startGameBtn.classList.remove('bg-orange-400');
+    startGameBtn.classList.add('bg-green-400','hover:bg-green-500','hover:text-white','hover:font-bold','hover:scale-105');
+
+    // change background color to show something happend
+    gameBody.classList.remove("bg-orange-300");
+    gameBody.classList.add("bg-green-300","transition","duration-300","ease-in-out");
+
+
+
+
+}
+
+function gameTie () {
 
 }
 
@@ -53,6 +117,10 @@ function checkWinner (gridMatrix) {
     if (gridMatrix[0][2] === gridMatrix[1][1] && gridMatrix[1][1] == gridMatrix[2][0])
         return gridMatrix[0][2];
 
+
+    // else return empty string to indicate no winner was found
+    return '';
+
 }
 
 function markGrid (event) {
@@ -71,6 +139,9 @@ function markGrid (event) {
                 currentGrid.innerHTML = 'X';
                 turn = 2;
                 infoBar.innerHTML = playerTwoName + "'s Turn";
+
+                // increase count
+                markedGridsCount++;
             }
 
         } 
@@ -84,8 +155,12 @@ function markGrid (event) {
                 currentGrid.innerHTML = 'O';
                 turn = 1;
                 infoBar.innerHTML = playerOneName + "'s Turn";
+                // increase count
+                markedGridsCount++;
             }
         }
+
+
     }
 
     // check winner
@@ -105,10 +180,17 @@ function markGrid (event) {
         [middleLeftGrid,middleMiddleGrid,middleRightGrid],
         [bottomLeftGrid,bottomMiddleGrid,bottomRightGrid]
     ];
-
-    if (checkWinner(grid2D) != ''){
-        console.log("winner found!!!!");
+    
+    const mark = checkWinner(grid2D);
+    console.log(markedGridsCount);
+    // if there is a winner
+    if (mark != ''){
+        endGame(mark);
+    } else if (markedGridsCount === 9) {
+        gameTie();
     }
+
+        
 }
 
 
