@@ -1,3 +1,3 @@
-# Tic Tac Toe (Vaninlla Javascript)
+# Tic Tac Toe (Vanilla Javascript)
 
 
