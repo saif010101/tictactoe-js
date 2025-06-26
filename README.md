@@ -1,4 +1,4 @@
-# Tic Tac Toe (Vanilla Javascript)
+# Tic Tac Toe (Tailwind CSS + Vanilla Javascript)
 
 
 # Usage
